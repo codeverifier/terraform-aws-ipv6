@@ -3,7 +3,7 @@
 Terraform project for provisioning IPv6 clusters in AWS.
 It follows the architecture below to provision the clusters in a hub-spoke topology.
 
-
+<img src="https://user-images.githubusercontent.com/2648624/224839862-5885768d-648d-421c-bee6-b38903af9027.png" width="50%" height="50%" alt="Hub-and-spoke topology">
 
 ## Instructions
 
