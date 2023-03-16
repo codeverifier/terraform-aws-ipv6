@@ -63,3 +63,9 @@ variable "kubernetes_version" {
   type        = string
   default     = null
 }
+
+variable "ec2_ssh_key" {
+  description = "SSH key name that should be used to access the instances"
+  type        = string
+  default     = null
+}

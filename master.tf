@@ -35,6 +35,8 @@ module "eks-ipv6-2" {
   kubernetes_version              = var.kubernetes_version
   create_cni_ipv6_iam_policy      = false
   allow_istio_mutation_webhook_sg = true
+  ec2_ssh_key                     = var.ec2_ssh_key
+  enable_bastion                  = true
 
   tags = local.tags
 }
@@ -102,6 +104,12 @@ module "tgw" {
       enable_vpn_ecmp_support = false
     }
   }
+
+  depends_on = [
+    module.eks-ipv6-1,
+    module.eks-ipv6-2,
+    module.eks-ipv6-3
+  ]
 
   tags = local.tags
 }

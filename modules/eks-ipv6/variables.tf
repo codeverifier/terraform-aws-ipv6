@@ -73,6 +73,18 @@ variable "allow_istio_mutation_webhook_sg" {
   default     = false
 }
 
+variable "ec2_ssh_key" {
+  description = "SSH key name that should be used to access the worker nodes"
+  type        = string
+  default     = null
+}
+
+variable "enable_bastion" {
+  description = "Enable bastion host in the VPC"
+  type        = bool
+  default     = false
+}
+
 # -- Tagging and labeling
 
 variable "tags" {
