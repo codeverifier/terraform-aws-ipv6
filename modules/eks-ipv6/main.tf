@@ -109,6 +109,11 @@ module "eks" {
       max_size     = var.max_nodes
       desired_size = var.nodes
       key_name     = var.ec2_ssh_key
+
+      # Patching the /etc/hosts to add 'localhost' for ::1
+      pre_bootstrap_user_data = <<-EOT
+      sed -i 's/::1         localhost6 localhost6.localdomain6/::1         localhost localhost6 localhost6.localdomain6/' /etc/hosts
+      EOT
     }
   }
 
