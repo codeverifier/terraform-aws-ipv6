@@ -57,7 +57,7 @@ module "eks-ipv6-3" {
 
 module "tgw" {
   source  = "terraform-aws-modules/transit-gateway/aws"
-  version = "~> 2.9.0"
+  version = "~> 2.10.0"
 
   name = local.tgw_name
 
@@ -65,7 +65,7 @@ module "tgw" {
   enable_auto_accept_shared_attachments = false
 
   # When "true", allows service discovery through IGMP
-  enable_mutlicast_support = false
+  enable_multicast_support = false
 
   enable_dns_support = true
 

@@ -17,7 +17,7 @@ data "aws_iam_policy" "cni_ipv6_policy" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 3.19.0"
+  version = "~> 4.0.2"
 
   name = local.name
   cidr = local.vpc_cidr
@@ -26,9 +26,12 @@ module "vpc" {
   public_subnets  = [for k, v in local.zones : cidrsubnet(local.vpc_cidr, 8, k)]
   private_subnets = [for k, v in local.zones : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
-  enable_ipv6                     = true
-  assign_ipv6_address_on_creation = true
-  create_egress_only_igw          = true
+  enable_ipv6                                    = true
+  public_subnet_assign_ipv6_address_on_creation  = true
+  private_subnet_assign_ipv6_address_on_creation = true
+  public_subnet_ipv6_native                      = false
+  private_subnet_ipv6_native                     = false
+  create_egress_only_igw                         = true
 
   public_subnet_ipv6_prefixes  = var.public_subnet_ipv6_prefixes
   private_subnet_ipv6_prefixes = var.private_subnet_ipv6_prefixes
@@ -75,7 +78,7 @@ module "bastion" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.10.0"
+  version = "~> 19.15.3"
 
   cluster_name                   = local.name
   cluster_version                = local.current_k8s_version
