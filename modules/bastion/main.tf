@@ -1,5 +1,5 @@
 locals {
-  name                   = try(format("%v-bastion", trim(var.prefix_name, 27)))
+  name                   = try(trim(format("%v-bastion", var.prefix_name, 32)), "bastion")
   public_ssh_port        = 22
   bastion_instance_count = 1
   disk_size              = 8
@@ -47,7 +47,7 @@ resource "aws_iam_instance_profile" "bastion_host_profile" {
 resource "aws_lb" "bastion_lb" {
   count = var.enable ? 1 : 0
 
-  name               = "${local.name}-lb"
+  name               = local.name
   subnets            = var.elb_subnets
   load_balancer_type = "network"
 
@@ -57,7 +57,7 @@ resource "aws_lb" "bastion_lb" {
 resource "aws_lb_target_group" "bastion_lb_target_group" {
   count = var.enable ? 1 : 0
 
-  name        = "${local.name}-lb"
+  name        = local.name
   port        = local.public_ssh_port
   protocol    = "TCP"
   vpc_id      = var.vpc_id

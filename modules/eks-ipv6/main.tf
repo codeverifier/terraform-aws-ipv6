@@ -2,8 +2,13 @@ data "aws_availability_zones" "available" {}
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
+resource "random_id" "eks_cluster_name_suffix" {
+  byte_length = 6
+}
+
 locals {
-  name                 = try(trim(format("%v-%v", var.owner, var.cluster_name), 28))
+  name                 = try(trim(format("%v-eks-ipv6-%v", var.owner, random_id.eks_cluster_name_suffix.hex), 26))
+  kubeconfig_context   = try(format("eks-ipv6-%v", random_id.eks_cluster_name_suffix.hex), "")
   current_k8s_version  = try(var.kubernetes_version, "")
   cni_ipv6_policy_name = "AmazonEKS_CNI_IPv6_Policy"
   vpc_cidr             = "10.0.0.0/16"
@@ -401,7 +406,7 @@ resource "aws_iam_policy" "alb_ingress_controller_iam_policy" {
   }
 }
 
-resource "aws_iam_role" "alb-ingress-controller-role" {
+resource "aws_iam_role" "alb_ingress_controller_role" {
   name = try(format("%v-alb", local.name))
 
   assume_role_policy = <<POLICY
@@ -441,17 +446,36 @@ POLICY
   )
 }
 
-resource "aws_iam_role_policy_attachment" "alb-ingress-controller-role-ingress-controller-attachment" {
-  role       = aws_iam_role.alb-ingress-controller-role.name
+resource "aws_iam_role_policy_attachment" "alb_ingress_controller_role_ingress_controller_attachment" {
+  role       = aws_iam_role.alb_ingress_controller_role.name
   policy_arn = aws_iam_policy.alb_ingress_controller_iam_policy.arn
 
-  depends_on = [aws_iam_role.alb-ingress-controller-role]
+  depends_on = [aws_iam_role.alb_ingress_controller_role]
 }
 
-resource "aws_iam_role_policy_attachment" "alb-ingress-controller-role-AmazonEKS_CNI_Policy" {
-  role       = aws_iam_role.alb-ingress-controller-role.name
+resource "aws_iam_role_policy_attachment" "alb_ingress_controller_role_AmazonEKS_CNI_Policy" {
+  role       = aws_iam_role.alb_ingress_controller_role.name
   policy_arn = "arn:aws:iam::${local.account_id}:policy/AmazonEKS_CNI_IPv6_Policy"
 
-  depends_on = [aws_iam_role.alb-ingress-controller-role]
+  depends_on = [aws_iam_role.alb_ingress_controller_role]
+}
+# -------------------------------------------------------------------------------------
+
+# --------------------------------- Kubeconfig ----------------------------------------
+data "template_file" "kubeconfig_tpl" {
+  template = file("${path.module}/files/kubeconfig-template.tpl")
+
+  vars = {
+    context                = local.kubeconfig_context
+    endpoint               = module.eks.cluster_endpoint
+    cluster_ca_certificate = module.eks.cluster_certificate_authority_data
+    cluster_name           = local.name
+    region                 = var.region
+  }
+}
+
+resource "local_file" "kubeconfig_tpl_renderer" {
+  content  = data.template_file.kubeconfig_tpl.rendered
+  filename = "${path.module}/output/kubeconfig-${local.kubeconfig_context}"
 }
 # -------------------------------------------------------------------------------------

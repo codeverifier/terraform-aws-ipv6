@@ -8,11 +8,6 @@ variable "region" {
   type        = string
 }
 
-variable "cluster_name" {
-  description = "EKS cluster name"
-  type        = string
-}
-
 variable "max_availability_zones" {
   description = "Maximum number of availability zones used for provisioning"
   type        = number
