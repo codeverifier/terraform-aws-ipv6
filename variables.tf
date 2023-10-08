@@ -69,3 +69,25 @@ variable "ec2_ssh_key" {
   type        = string
   default     = null
 }
+
+# ----------------------------------------------------------------------------------
+# Module properties
+# ----------------------------------------------------------------------------------
+
+variable "enable_ipv6_1" {
+  description = "Enable Cluster ID #1 (Default: `true`)"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ipv6_2" {
+  description = "Enable Cluster ID #2 (Default: `true`)"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ipv6_3" {
+  description = "Enable Cluster ID #3 (Default: `true`)"
+  type        = bool
+  default     = true
+}
