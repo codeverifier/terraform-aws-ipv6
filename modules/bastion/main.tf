@@ -1,5 +1,5 @@
 locals {
-  name                   = try(trim(format("%v-bastion", var.prefix_name, 32)), "bastion")
+  name                   = try(trim(format("%v-bastion", var.prefix_name), 20), "bastion")
   public_ssh_port        = 22
   bastion_instance_count = 1
   disk_size              = 8

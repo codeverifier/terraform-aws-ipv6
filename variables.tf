@@ -70,6 +70,12 @@ variable "ec2_ssh_key" {
   default     = null
 }
 
+variable "create_cni_ipv6_iam_policy" {
+  description = "Determines whether to create an [`AmazonEKS_CNI_IPv6_Policy`](https://docs.aws.amazon.com/eks/latest/userguide/cni-iam-role.html#cni-iam-role-create-ipv6-policy). Currently only a single cluster is supported to create this, https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2131"
+  type        = bool
+  default     = false
+}
+
 # ----------------------------------------------------------------------------------
 # Module properties
 # ----------------------------------------------------------------------------------

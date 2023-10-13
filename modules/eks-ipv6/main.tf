@@ -3,11 +3,11 @@ data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
 resource "random_id" "eks_cluster_name_suffix" {
-  byte_length = 6
+  byte_length = 4
 }
 
 locals {
-  name                 = try(trim(format("%v-eks-ipv6-%v", var.owner, random_id.eks_cluster_name_suffix.hex), 26))
+  name                 = try(trim(format("%v-ipv6-%v", var.owner, random_id.eks_cluster_name_suffix.hex), 20), "")
   kubeconfig_context   = try(format("eks-ipv6-%v", random_id.eks_cluster_name_suffix.hex), "")
   current_k8s_version  = try(var.kubernetes_version, "")
   cni_ipv6_policy_name = "AmazonEKS_CNI_IPv6_Policy"
@@ -91,7 +91,7 @@ module "eks" {
 
   cluster_ip_family = "ipv6"
   # Created externally due to https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2131
-  create_cni_ipv6_iam_policy = length(data.aws_iam_policy.cni_ipv6_policy.arn) > 0 ? false : true # var.create_cni_ipv6_iam_policy
+  create_cni_ipv6_iam_policy = false #ar.create_cni_ipv6_iam_policy ? true : (length(data.aws_iam_policy.cni_ipv6_policy.arn) > 0 ? false : true)
 
   create_cluster_primary_security_group_tags = true
 
