@@ -37,6 +37,8 @@ module "vpc" {
   public_subnet_ipv6_native                      = false
   private_subnet_ipv6_native                     = false
   create_egress_only_igw                         = true
+  public_subnet_enable_dns64                     = var.enable_dns64
+  private_subnet_enable_dns64                    = var.enable_dns64
 
   public_subnet_ipv6_prefixes  = var.public_subnet_ipv6_prefixes
   private_subnet_ipv6_prefixes = var.private_subnet_ipv6_prefixes

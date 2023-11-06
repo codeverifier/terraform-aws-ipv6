@@ -9,7 +9,7 @@ variable "region" {
 }
 
 variable "max_availability_zones" {
-  description = "Maximum number of availability zones used for provisioning"
+  description = "Maximum number of availability zones used for provisioning (Default: `3`)"
   type        = number
   default     = 3
 }
@@ -63,7 +63,7 @@ variable "kubernetes_version" {
 }
 
 variable "allow_istio_mutation_webhook_sg" {
-  description = "Allow security group for Istio mutation webhook (In other words allows Kubernetes admission controller access)"
+  description = "Allow security group for Istio mutation webhook (In other words allows Kubernetes admission controller access) (Default: `false`)"
   type        = bool
   default     = false
 }
@@ -75,7 +75,13 @@ variable "ec2_ssh_key" {
 }
 
 variable "enable_bastion" {
-  description = "Enable bastion host in the VPC"
+  description = "Enable bastion host in the VPC (Default: `false`)"
+  type        = bool
+  default     = false
+}
+
+variable "enable_dns64" {
+  description = "DNS queries made to the Amazon-provided DNS Resolver in this subnet should return synthetic IPv6 addresses for IPv4-only destinations (Default: `false`)"
   type        = bool
   default     = false
 }

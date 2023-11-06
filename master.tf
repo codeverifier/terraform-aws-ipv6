@@ -21,6 +21,7 @@ module "eks_ipv6_1" {
   max_availability_zones     = var.max_availability_zones_per_cluster
   kubernetes_version         = var.kubernetes_version
   create_cni_ipv6_iam_policy = var.create_cni_ipv6_iam_policy
+  enable_dns64               = var.enable_dns64
 
   tags = local.tags
 }
@@ -36,6 +37,7 @@ module "eks_ipv6_2" {
   allow_istio_mutation_webhook_sg = true
   ec2_ssh_key                     = var.ec2_ssh_key
   enable_bastion                  = true
+  enable_dns64                    = var.enable_dns64
 
   tags = local.tags
 }
@@ -49,6 +51,7 @@ module "eks_ipv6_3" {
   max_availability_zones          = var.max_availability_zones_per_cluster
   kubernetes_version              = var.kubernetes_version
   allow_istio_mutation_webhook_sg = true
+  enable_dns64                    = var.enable_dns64
 
   tags = local.tags
 }
